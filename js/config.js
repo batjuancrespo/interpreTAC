@@ -12,7 +12,8 @@ const Config = {
         maxSlices: 12,
         temperature: 0.1,
         systemPrompt: '',
-        promptVersion: '0.0.0'
+        promptVersion: '0.0.0',
+        learningLessons: [] // New: Array of {type, finding, correction}
     },
 
     getDefaultPrompt(studyType) {
@@ -128,5 +129,27 @@ CONCLUSIÓN:
     hasApiKey() {
         const key = this.get('apiKey');
         return key && key.trim().length > 10;
+    },
+
+    // ===== LEARNING LESSONS =====
+    getLearningLessons() {
+        return this.get('learningLessons') || [];
+    },
+
+    addLearningLesson(lesson) {
+        const lessons = this.getLearningLessons();
+        lessons.push({
+            ...lesson,
+            date: new Date().toISOString()
+        });
+        // Keep only last 20 lessons to avoid prompt bloat
+        if (lessons.length > 20) {
+            lessons.shift();
+        }
+        this.set('learningLessons', lessons);
+    },
+
+    clearLearningLessons() {
+        this.set('learningLessons', []);
     }
 };

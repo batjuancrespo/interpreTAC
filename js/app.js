@@ -132,6 +132,12 @@ const App = {
         document.getElementById('btnCloseConfig').addEventListener('click', () => this.closeConfig());
         document.querySelector('.modal-backdrop').addEventListener('click', () => this.closeConfig());
         document.getElementById('btnSaveConfig').addEventListener('click', () => this.saveConfig());
+
+        // Teach modal
+        document.getElementById('btnTeach').addEventListener('click', () => this.openTeach());
+        document.getElementById('btnCloseTeach').addEventListener('click', () => this.closeTeach());
+        document.getElementById('btnSaveLesson').addEventListener('click', () => this.saveLesson());
+        document.getElementById('teachType').addEventListener('change', (e) => this.handleTeachTypeChange(e));
         document.getElementById('btnResetPrompt').addEventListener('click', () => {
             const studyType = document.getElementById('studyType').value;
             document.getElementById('systemPrompt').value = Config.getDefaultPrompt(studyType);
@@ -843,6 +849,44 @@ const App = {
 
     loadConfig() {
         // Config is loaded lazily from localStorage
+    },
+
+    // ===== TEACH MODAL =====
+    openTeach() {
+        document.getElementById('teachModal').style.display = 'flex';
+    },
+
+    closeTeach() {
+        document.getElementById('teachModal').style.display = 'none';
+        document.getElementById('teachFinding').value = '';
+        document.getElementById('teachCorrection').value = '';
+    },
+
+    handleTeachTypeChange(e) {
+        const label = document.getElementById('teachFindingLabel');
+        const type = e.target.value;
+        if (type === 'omission') {
+            label.textContent = 'Hallazgo omitido/no detectado:';
+        } else if (type === 'error') {
+            label.textContent = 'Hallazgo mal interpretado:';
+        } else {
+            label.textContent = 'Elemento a corregir:';
+        }
+    },
+
+    saveLesson() {
+        const type = document.getElementById('teachType').value;
+        const finding = document.getElementById('teachFinding').value;
+        const correction = document.getElementById('teachCorrection').value;
+
+        if (!finding || !correction) {
+            this.showToast('Por favor, rellena todos los campos', 'warning');
+            return;
+        }
+
+        Config.addLearningLesson({ type, finding, correction });
+        this.showToast('🧠 Lección guardada. La IA aprenderá de esto en el próximo estudio.', 'success');
+        this.closeTeach();
     },
 
     // ===== TOAST NOTIFICATIONS =====

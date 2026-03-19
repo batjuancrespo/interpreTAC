@@ -27,12 +27,24 @@ const AIEngine = {
             'tac-abdominal-sin': 'TAC Abdominal sin contraste',
             'tac-torax': 'TAC de Tórax con contraste intravenoso'
         };
+        // Support for Diagnostic Learning Base
+        const lessons = Config.getLearningLessons();
+        let lessonsContext = '';
+        if (lessons.length > 0) {
+            lessonsContext = '\n\nHISTORIAL DE CORRECCIONES Y APRENDIZAJE EXPERTO (Casos donde fallaste anteriormente):\n';
+            lessons.forEach((l, i) => {
+                const typeText = l.type === 'omission' ? 'Omitiste detectar' : 'Interpretaste mal';
+                lessonsContext += `- ${typeText}: "${l.finding}". Corrección del doctor: "${l.correction}"\n`;
+            });
+            lessonsContext += '\n⚠️ USA ESTAS LECCIONES para no repetir los mismos errores en este estudio.';
+        }
+
         const studyName = studyNames[studyType] || 'TAC';
 
         // Build request parts
         const parts = [
             {
-                text: systemPrompt + `\n\nTipo de estudio: ${studyName}\nSe proporcionan ${images.length} cortes representativos del estudio.\nGenera el pre-informe ahora:`
+                text: systemPrompt + lessonsContext + `\n\nTipo de estudio: ${studyName}\nSe proporcionan ${images.length} cortes representativos del estudio.\nGenera el pre-informe ahora:`
             }
         ];
 
@@ -135,6 +147,10 @@ const AIEngine = {
             }
 
             if (onProgress) onProgress('¡Pre-informe generado!', 100);
+
+            // Show Teach button now that we have a report
+            const btnTeach = document.getElementById('btnTeach');
+            if (btnTeach) btnTeach.style.display = 'inline-flex';
 
             return this.parseReport(text);
         } catch (error) {
