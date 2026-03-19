@@ -138,6 +138,12 @@ const App = {
         document.getElementById('btnCloseTeach').addEventListener('click', () => this.closeTeach());
         document.getElementById('btnSaveLesson').addEventListener('click', () => this.saveLesson());
         document.getElementById('teachType').addEventListener('change', (e) => this.handleTeachTypeChange(e));
+
+        // Knowledge Management
+        document.getElementById('btnExportKnowledge')?.addEventListener('click', () => this.exportKnowledge());
+        document.getElementById('btnImportKnowledge')?.addEventListener('click', () => document.getElementById('importKnowledgeInput').click());
+        document.getElementById('importKnowledgeInput')?.addEventListener('change', (e) => this.importKnowledge(e));
+        document.getElementById('btnClearKnowledge')?.addEventListener('click', () => this.clearKnowledge());
         document.getElementById('btnResetPrompt').addEventListener('click', () => {
             const studyType = document.getElementById('studyType').value;
             document.getElementById('systemPrompt').value = Config.getDefaultPrompt(studyType);
@@ -849,6 +855,64 @@ const App = {
 
     loadConfig() {
         // Config is loaded lazily from localStorage
+    },
+
+    // ===== KNOWLEDGE MANAGEMENT =====
+    exportKnowledge() {
+        const lessons = Config.getLearningLessons();
+        if (lessons.length === 0) {
+            this.showToast('No hay lecciones guardadas para exportar', 'warning');
+            return;
+        }
+
+        const data = {
+            version: '1.0',
+            exportedAt: new Date().toISOString(),
+            lessons: lessons
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `radioassist_knowledge_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.showToast('✅ Conocimientos exportados correctamente', 'success');
+    },
+
+    async importKnowledge(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+
+            if (!data.lessons || !Array.isArray(data.lessons)) {
+                throw new Error('El archivo no tiene el formato correcto.');
+            }
+
+            if (confirm(`¿Deseas importar ${data.lessons.length} lecciones? Esto sobrescribirá tus lecciones actuales.`)) {
+                // Clear and add new
+                Config.set('learningLessons', data.lessons);
+                this.showToast(`✅ Se han importado ${data.lessons.length} lecciones con éxito`, 'success');
+            }
+        } catch (error) {
+            this.showToast(`❌ Error al importar: ${error.message}`, 'error');
+        } finally {
+            event.target.value = ''; // Reset input
+        }
+    },
+
+    clearKnowledge() {
+        if (confirm('¿Estás seguro de que quieres borrar TODA la memoria de la IA? Esta acción no se puede deshacer.')) {
+            Config.clearLearningLessons();
+            this.showToast('🗑️ Memoria de la IA borrada', 'info');
+        }
     },
 
     // ===== TEACH MODAL =====

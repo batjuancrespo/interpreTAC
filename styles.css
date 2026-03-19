@@ -677,6 +677,10 @@ body {
     gap: 12px;
 }
 
+.text-danger {
+    color: #ff4d4d !important;
+}
+
 .report-section, .report-raw {
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);

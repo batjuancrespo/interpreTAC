@@ -301,6 +301,23 @@
                     <textarea id="systemPrompt" class="config-prompt" rows="8"></textarea>
                     <button id="btnResetPrompt" class="btn btn-sm btn-outline">Restaurar prompt por defecto</button>
                 </div>
+                <!-- Knowledge Management -->
+                <div class="config-section" style="border-top: 1px solid var(--border-primary); margin-top: 20px; padding-top: 15px;">
+                    <h3>Gestión de Conocimientos (IA)</h3>
+                    <p class="config-help">Exporta o importa tus lecciones aprendidas para usarlas en otro equipo.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button id="btnExportKnowledge" class="btn btn-sm btn-outline">
+                            📥 Exportar
+                        </button>
+                        <button id="btnImportKnowledge" class="btn btn-sm btn-outline">
+                            📂 Importar
+                        </button>
+                        <button id="btnClearKnowledge" class="btn btn-sm btn-outline text-danger">
+                            🗑️ Borrar Memoria
+                        </button>
+                    </div>
+                    <input type="file" id="importKnowledgeInput" style="display:none;" accept=".json">
+                </div>
             </div>
             <div class="modal-footer">
                 <button id="btnSaveConfig" class="btn btn-primary">💾 Guardar</button>
