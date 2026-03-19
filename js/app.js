@@ -120,6 +120,7 @@ const App = {
 
         // Export
         document.getElementById('btnCopy').addEventListener('click', () => this.copyReport());
+        document.getElementById('btnExport').addEventListener('click', () => this.exportReport());
         document.getElementById('btnClear').addEventListener('click', () => this.newStudy());
 
         // Config modal
@@ -751,6 +752,15 @@ const App = {
             this.showToast('No se pudo copiar', 'error');
         }
         setTimeout(() => { feedback.textContent = ''; }, 3000);
+    },
+
+    exportReport() {
+        const success = ReportEditor.exportToPDF();
+        if (success) {
+            this.showToast('Generando vista de impresión...', 'success', 2000);
+        } else {
+            this.showToast('No hay informe para exportar', 'warning');
+        }
     },
 
     newStudy() {

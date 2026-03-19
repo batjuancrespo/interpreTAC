@@ -449,7 +449,9 @@ const DicomHandler = {
         const windows = [
             { name: 'Abdomen', wc: 40, ww: 400 },
             { name: 'Pulmón', wc: -600, ww: 1500 },
-            { name: 'Hueso', wc: 300, ww: 1500 }
+            { name: 'Hueso', wc: 300, ww: 1500 },
+            { name: 'Mediastino', wc: 60, ww: 400 },
+            { name: 'Cerebro', wc: 40, ww: 80 }
         ];
 
         for (const idx of indices) {

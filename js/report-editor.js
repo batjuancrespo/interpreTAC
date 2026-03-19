@@ -119,5 +119,63 @@ const ReportEditor = {
                 el.addEventListener('input', () => this.autoResize(el));
             }
         });
+    },
+
+    // ===== EXPORT =====
+    exportToPDF() {
+        const report = this.getCurrentReport();
+        const patient = DicomHandler.getPatientInfo();
+        
+        if (!report.hallazgos && !report.tecnica) {
+            return false;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Informe Radiológico - ${patient.name}</title>
+                <style>
+                    body { font-family: 'Inter', sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+                    .header { border-bottom: 2px solid #333; margin-bottom: 30px; padding-bottom: 10px; }
+                    .header h1 { margin: 0; font-size: 24px; }
+                    .patient-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; font-size: 14px; }
+                    .section { margin-bottom: 25px; }
+                    .section h3 { font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; color: #0056b3; }
+                    .content { white-space: pre-wrap; font-size: 14px; }
+                    @media print { .no-print { display: none; } }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>RadioAssist — Informe Radiológico</h1>
+                </div>
+                <div class="patient-info">
+                    <div><strong>Paciente:</strong> ${patient.name}</div>
+                    <div><strong>ID:</strong> ${patient.id}</div>
+                    <div><strong>Estudio:</strong> ${patient.series}</div>
+                    <div><strong>Modalidad:</strong> ${patient.modality}</div>
+                    <div><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</div>
+                </div>
+                <div class="section">
+                    <h3>TÉCNICA</h3>
+                    <div class="content">${report.tecnica || 'No especificada'}</div>
+                </div>
+                <div class="section">
+                    <h3>HALLAZGOS</h3>
+                    <div class="content">${report.hallazgos || 'No especificados'}</div>
+                </div>
+                <div class="section">
+                    <h3>CONCLUSIÓN</h3>
+                    <div class="content">${report.conclusion || 'No especificada'}</div>
+                </div>
+                <div class="no-print" style="margin-top: 50px; text-align: center;">
+                    <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer;">Imprimir / Guardar PDF</button>
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        return true;
     }
 };
