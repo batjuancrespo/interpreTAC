@@ -123,6 +123,10 @@ const App = {
         document.getElementById('btnExport').addEventListener('click', () => this.exportReport());
         document.getElementById('btnClear').addEventListener('click', () => this.newStudy());
 
+        // Report Tabs
+        document.getElementById('tabSections').addEventListener('click', () => ReportEditor.switchTab('sections'));
+        document.getElementById('tabRaw').addEventListener('click', () => ReportEditor.switchTab('raw'));
+
         // Config modal
         document.getElementById('btnConfig').addEventListener('click', () => this.openConfig());
         document.getElementById('btnCloseConfig').addEventListener('click', () => this.closeConfig());

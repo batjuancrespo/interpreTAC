@@ -10,17 +10,42 @@ const ReportEditor = {
     showReport(report) {
         this.currentReport = report;
 
+        // Structured view
         document.getElementById('sectionTecnica').value = report.tecnica || '';
         document.getElementById('sectionHallazgos').value = report.hallazgos || '';
         document.getElementById('sectionConclusion').value = report.conclusion || '';
 
+        // Raw view
+        document.getElementById('rawContent').value = report.raw || '';
+
         // Auto-resize textareas
         this.autoResizeAll();
 
-        // Show report sections, hide placeholder
+        // Show default view (sections)
+        this.switchTab('sections');
+
+        // Toggle visibility
         document.querySelector('.report-placeholder').style.display = 'none';
-        document.getElementById('reportSections').style.display = 'flex';
         document.getElementById('exportBar').style.display = 'flex';
+    },
+
+    switchTab(tab) {
+        const sectionsEl = document.getElementById('reportSections');
+        const rawEl = document.getElementById('reportRaw');
+        const tabSections = document.getElementById('tabSections');
+        const tabRaw = document.getElementById('tabRaw');
+
+        if (tab === 'sections') {
+            sectionsEl.style.display = 'block';
+            rawEl.style.display = 'none';
+            tabSections.classList.add('active');
+            tabRaw.classList.remove('active');
+        } else {
+            sectionsEl.style.display = 'none';
+            rawEl.style.display = 'block';
+            tabSections.classList.remove('active');
+            tabRaw.classList.add('active');
+        }
     },
 
     // ===== GET CURRENT REPORT =====

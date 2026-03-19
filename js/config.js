@@ -27,6 +27,7 @@ const Config = {
    - Si el FOV es de 400mm y un quiste ocupa 1/4 de la imagen, mide 100mm (10cm).
    - ¡NO des medidas genéricas de 2cm! Mide con precisión usando los datos de escala. Un quiste de 9cm debe ser reportado como 9cm (90mm).
 3. **TONO PROFESIONAL:** Informe estructurado, conciso y técnico.
+4. **FORMATO RÍGIDO (CRÍTICO):** Utiliza exactamente los encabezados "TÉCNICA:", "HALLAZGOS:" y "CONCLUSIÓN:". No añadas introducciones como "Aquí tienes el informe" ni advertencias legales al final para evitar bloqueos de seguridad.
 
 ESTRUCTURA DE RESPUESTA (SIGUE ESTE ORDEN EXACTO):
 

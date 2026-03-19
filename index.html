@@ -172,6 +172,10 @@
             <div class="panel-header">
                 <h2>Pre-Informe</h2>
                 <div class="report-actions">
+                    <div class="report-tabs">
+                        <button id="tabSections" class="tab-btn active">Secciones</button>
+                        <button id="tabRaw" class="tab-btn">Texto Completo</button>
+                    </div>
                     <button id="btnGenerate" class="btn btn-accent" disabled>
                         <span class="btn-content">🤖 Generar Pre-Informe</span>
                         <span class="btn-loading" style="display:none;">
@@ -223,6 +227,12 @@
                         <textarea id="sectionConclusion" class="section-content" rows="5"
                             placeholder="Conclusión..."></textarea>
                     </div>
+                </div>
+
+                <!-- Raw Report (hidden by default) -->
+                <div id="reportRaw" class="report-raw" style="display:none;">
+                    <textarea id="rawContent" class="section-content" rows="25" readonly
+                        placeholder="El texto completo del informe aparecerá aquí..."></textarea>
                 </div>
             </div>
 
